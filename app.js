@@ -444,8 +444,6 @@ function newProject() {
 
   document.getElementById("take").value = "";
 
-  document.getElementById("roll").value = "";
-
   document.getElementById("clip").value = "";
 
   document.getElementById("note").value = "";
