@@ -777,13 +777,35 @@ async function saveTake() {
 
 
   try {
+    // ============================
+    // 1. Save to local IndexedDB
+    // ============================
 
-    // Save the log first.
     await saveLogToDB(log);
 
     logs.push(log);
 
     renderHistory();
+
+
+    // ============================
+    // 2. Send to Google Sheet
+    // ============================
+
+    const googleSheetSuccess =
+      await sendToGoogleSheet(log);
+
+
+    if (!googleSheetSuccess) {
+
+      console.warn(
+        "Log was saved locally, but Google Sheet sync failed."
+      );
+
+      alert(
+        "已儲存在本機，但 Google Sheet 同步失敗。"
+      );
+    }
 
 
     // ============================
