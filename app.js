@@ -288,8 +288,6 @@ function saveTake() {
 
   document.getElementById("take").value = "";
 
-  document.getElementById("roll").value = "";
-
   document.getElementById("clip").value = "";
 
   document.getElementById("note").value = "";
@@ -443,6 +441,8 @@ function newProject() {
   // Clear Take
 
   document.getElementById("take").value = "";
+
+  document.getElementById("roll").value = "";
 
   document.getElementById("clip").value = "";
 
