@@ -1,13 +1,298 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
   <title>Camera Log</title>
+
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <h1>Camera Log</h1>
-  <p>Camera Log App</p>
+
+  <header class="topbar">
+    <div>
+      <h1>CAMERA LOG</h1>
+      <p id="currentProject">No Project</p>
+    </div>
+
+    <button class="secondary-btn" onclick="newProject()">
+      NEW PROJECT
+    </button>
+  </header>
+
+
+  <main class="container">
+
+    <!-- PROJECT -->
+    <section class="card">
+
+      <div class="section-title">
+        <h2>PROJECT</h2>
+        <button onclick="toggleSection('projectContent')">
+          EDIT
+        </button>
+      </div>
+
+      <div id="projectContent" class="content">
+
+        <div class="grid">
+
+          <label>
+            DATE
+            <input id="date" type="date">
+          </label>
+
+          <label>
+            PROJECT
+            <input id="project" type="text">
+          </label>
+
+          <label>
+            DIRECTOR
+            <input id="director" type="text">
+          </label>
+
+          <label>
+            DP
+            <input id="dp" type="text">
+          </label>
+
+          <label>
+            CAMERA
+            <input id="camera" type="text">
+          </label>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- SCENE -->
+    <section class="card">
+
+      <div class="section-title">
+
+        <div>
+          <span class="section-label">SCENE</span>
+          <span id="currentScene" class="current-value">
+            —
+          </span>
+        </div>
+
+        <button onclick="editScene()">
+          EDIT
+        </button>
+
+      </div>
+
+
+      <div class="content">
+
+        <div class="grid">
+
+          <label>
+            SCENE
+            <input id="scene" type="text">
+          </label>
+
+        </div>
+
+
+        <h3>SCENE SETUP</h3>
+
+        <div class="grid">
+
+          <label>
+            FPS
+            <input id="fps" type="text">
+          </label>
+
+          <label>
+            SHUTTER
+            <input id="shutter" type="text">
+          </label>
+
+          <label>
+            ISO
+            <input id="iso" type="text">
+          </label>
+
+          <label>
+            COLOR TEMP
+            <input id="colorTemp" type="text">
+          </label>
+
+          <label>
+            LUT
+            <input id="lut" type="text">
+          </label>
+
+          <label>
+            RESOLUTION
+            <input id="resolution" type="text">
+          </label>
+
+          <label>
+            FORMAT
+            <input id="format" type="text">
+          </label>
+
+          <label>
+            ASPECT RATIO
+            <input id="aspectRatio" type="text">
+          </label>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- SHOT -->
+    <section class="card">
+
+      <div class="section-title">
+
+        <div>
+          <span class="section-label">SHOT</span>
+          <span id="currentShot" class="current-value">
+            —
+          </span>
+        </div>
+
+        <button onclick="editShot()">
+          EDIT
+        </button>
+
+      </div>
+
+
+      <div class="content">
+
+        <div class="grid">
+
+          <label>
+            SHOT
+            <input id="shot" type="text">
+          </label>
+
+        </div>
+
+
+        <h3>SHOT SETUP</h3>
+
+        <div class="grid">
+
+          <label>
+            LENS
+            <input id="lens" type="text">
+          </label>
+
+          <label>
+            FILTERS
+            <input id="filters" type="text">
+          </label>
+
+          <label>
+            FOCUS
+            <input id="focus" type="text">
+          </label>
+
+          <label>
+            HEIGHT
+            <input id="height" type="text">
+          </label>
+
+          <label>
+            TILT
+            <input id="tilt" type="text">
+          </label>
+
+          <label>
+            STOP
+            <input id="stop" type="text">
+          </label>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- TAKE -->
+    <section class="card take-card">
+
+      <div class="section-title">
+
+        <h2>TAKE</h2>
+
+      </div>
+
+      <div class="grid">
+
+        <label>
+          TAKE
+          <input id="take" type="text">
+        </label>
+
+        <label>
+          ROLL
+          <input id="roll" type="text">
+        </label>
+
+        <label>
+          CLIP
+          <input id="clip" type="text">
+        </label>
+
+      </div>
+
+
+      <label class="note-field">
+        NOTE
+        <textarea id="note"></textarea>
+      </label>
+
+
+      <button class="save-btn" onclick="saveTake()">
+        SAVE
+      </button>
+
+    </section>
+
+
+    <!-- LOG HISTORY -->
+    <section class="card">
+
+      <div class="section-title">
+
+        <h2>LOG HISTORY</h2>
+
+      </div>
+
+      <div id="logHistory">
+
+        <p class="empty">
+          No logs yet.
+        </p>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+  <script src="app.js"></script>
+
 </body>
 </html>
