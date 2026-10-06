@@ -251,135 +251,166 @@ function saveLogToDB(log) {
 // Send Log to Google Sheet
 // ==============================
 
-async function sendToGoogleSheet(log) {
+// ==============================
+// Send Log to Google Sheet
+// ==============================
 
-  try {
+function sendToGoogleSheet(log) {
 
-    const response = await fetch(
-      GOOGLE_SCRIPT_URL,
-      {
-        method: "POST",
+  return new Promise((resolve) => {
 
-        headers: {
-          "Content-Type": "text/plain;charset=utf-8"
-        },
+    // Create hidden iframe
+    const iframe =
+      document.createElement("iframe");
 
-        body: JSON.stringify({
+    const iframeName =
+      "googleSheetSubmit_" +
+      Date.now();
 
-          DATE:
-            log.project.date,
+    iframe.name = iframeName;
 
-          PROJECT:
-            log.project.project,
+    iframe.style.display = "none";
 
-          DIRECTOR:
-            log.project.director,
-
-          DP:
-            log.project.dp,
-
-          Camera:
-            log.project.camera,
-
-          SCENE:
-            log.scene.scene,
-
-          SHOT:
-            log.shot.shot,
-
-          TAKE:
-            log.take,
-
-          ROLL:
-            log.roll,
-
-          CLIP:
-            log.clip,
-
-          LENS:
-            log.shot.lens,
-
-          FILTERS:
-            log.shot.filters,
-
-          FOCUS:
-            log.shot.focus,
-
-          HEIGHT:
-            log.shot.height,
-
-          TILT:
-            log.shot.tilt,
-
-          STOP:
-            log.shot.stop,
-
-          FPS:
-            log.scene.fps,
-
-          SHUTTER:
-            log.scene.shutter,
-
-          ISO:
-            log.scene.iso,
-
-          "Color Temp":
-            log.scene.colorTemp,
-
-          LUT:
-            log.scene.lut,
-
-          RESOLUTION:
-            log.scene.resolution,
-
-          FORMAT:
-            log.scene.format,
-
-          "ASPECT RATIO":
-            log.scene.aspectRatio,
-
-          NOTE:
-            log.note
-        })
-      }
-    );
+    document.body.appendChild(iframe);
 
 
-    const result =
-      await response.json();
+    // Create hidden form
+    const form =
+      document.createElement("form");
+
+    form.method = "POST";
+
+    form.action =
+      GOOGLE_SCRIPT_URL;
+
+    form.target =
+      iframeName;
+
+    form.style.display = "none";
+
+
+    // Data that will be sent
+    const data = {
+
+      DATE:
+        log.project.date,
+
+      PROJECT:
+        log.project.project,
+
+      DIRECTOR:
+        log.project.director,
+
+      DP:
+        log.project.dp,
+
+      Camera:
+        log.project.camera,
+
+      SCENE:
+        log.scene.scene,
+
+      SHOT:
+        log.shot.shot,
+
+      TAKE:
+        log.take,
+
+      ROLL:
+        log.roll,
+
+      CLIP:
+        log.clip,
+
+      LENS:
+        log.shot.lens,
+
+      FILTERS:
+        log.shot.filters,
+
+      FOCUS:
+        log.shot.focus,
+
+      HEIGHT:
+        log.shot.height,
+
+      TILT:
+        log.shot.tilt,
+
+      STOP:
+        log.shot.stop,
+
+      FPS:
+        log.scene.fps,
+
+      SHUTTER:
+        log.scene.shutter,
+
+      ISO:
+        log.scene.iso,
+
+      "Color Temp":
+        log.scene.colorTemp,
+
+      LUT:
+        log.scene.lut,
+
+      RESOLUTION:
+        log.scene.resolution,
+
+      FORMAT:
+        log.scene.format,
+
+      "ASPECT RATIO":
+        log.scene.aspectRatio,
+
+      NOTE:
+        log.note
+    };
+
+
+    // Send JSON as one form field
+    const input =
+      document.createElement("input");
+
+    input.type = "hidden";
+
+    input.name = "data";
+
+    input.value =
+      JSON.stringify(data);
+
+    form.appendChild(input);
+
+
+    document.body.appendChild(form);
+
+
+    // Submit to Apps Script
+    form.submit();
 
 
     console.log(
-      "Google Sheet response:",
-      result
+      "Google Sheet submission sent."
     );
 
 
-    if (!result.success) {
+    // Give Apps Script time to receive the request.
+    setTimeout(() => {
 
-      throw new Error(
-        result.error ||
-        "Google Sheet rejected the data."
+      form.remove();
+
+      iframe.remove();
+
+      console.log(
+        "Google Sheet submission completed."
       );
-    }
 
+      resolve(true);
 
-    console.log(
-      "Google Sheet sync successful."
-    );
+    }, 1500);
 
-    return true;
-
-
-  } catch (error) {
-
-    console.error(
-      "Google Sheet sync failed:",
-      error
-    );
-
-    return false;
-  }
+  });
 }
 
 // ==============================
