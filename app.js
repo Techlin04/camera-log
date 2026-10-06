@@ -6,6 +6,9 @@
 const DB_NAME = "CameraLogDB";
 const DB_VERSION = 2;
 
+const GOOGLE_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbz9ciA4Nk41eiEPbsu77X-m2KD1kqhd64MuwTMfxg9-D9aDE4dlwsHzQB3rOSSwQRHUMw/exec";
+
 let db = null;
 let logs = [];
 
