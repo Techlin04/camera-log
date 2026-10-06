@@ -1,9 +1,12 @@
-// ================================
-// CAMERA LOG - BASIC UI LOGIC
-// ================================
+// ============================================
+// CAMERA LOG
+// IndexedDB Local Storage Version
+// ============================================
 
 
-// ---------- Current Project ----------
+// ============================================
+// GLOBAL STATE
+// ============================================
 
 let projectState = {
   date: "",
@@ -13,8 +16,6 @@ let projectState = {
   camera: ""
 };
 
-
-// ---------- Current Scene ----------
 
 let sceneState = {
   scene: "",
@@ -30,8 +31,6 @@ let sceneState = {
 };
 
 
-// ---------- Current Shot ----------
-
 let shotState = {
   shot: "",
 
@@ -44,44 +43,554 @@ let shotState = {
 };
 
 
-// ---------- Log History ----------
-
 let logs = [];
 
 
-// ==================================
-// INITIALIZE
-// ==================================
+// ============================================
+// INDEXEDDB SETTINGS
+// ============================================
 
-document.addEventListener("DOMContentLoaded", function () {
+const DB_NAME = "CameraLogDB";
 
-  console.log("Camera Log App loaded");
+const DB_VERSION = 1;
 
-});
+const STATE_STORE = "state";
+
+const LOG_STORE = "logs";
+
+let db;
 
 
-// ==================================
+// ============================================
+// OPEN DATABASE
+// ============================================
+
+function openDatabase() {
+
+  return new Promise(function (resolve, reject) {
+
+    const request =
+      indexedDB.open(DB_NAME, DB_VERSION);
+
+
+    // First time database is created
+
+    request.onupgradeneeded = function (event) {
+
+      const database = event.target.result;
+
+
+      // State store
+
+      if (!database.objectStoreNames.contains(STATE_STORE)) {
+
+        database.createObjectStore(
+          STATE_STORE,
+          { keyPath: "id" }
+        );
+
+      }
+
+
+      // Log store
+
+      if (!database.objectStoreNames.contains(LOG_STORE)) {
+
+        database.createObjectStore(
+          LOG_STORE,
+          {
+            keyPath: "id",
+            autoIncrement: true
+          }
+        );
+
+      }
+
+    };
+
+
+    request.onsuccess = function (event) {
+
+      db = event.target.result;
+
+      console.log("IndexedDB opened.");
+
+      resolve(db);
+
+    };
+
+
+    request.onerror = function (event) {
+
+      console.error(
+        "IndexedDB error:",
+        event.target.error
+      );
+
+      reject(event.target.error);
+
+    };
+
+  });
+
+}
+
+
+// ============================================
+// SAVE CURRENT STATE
+// ============================================
+
+function saveStateToDB() {
+
+  if (!db) return;
+
+
+  return new Promise(function (resolve, reject) {
+
+    const transaction =
+      db.transaction(
+        STATE_STORE,
+        "readwrite"
+      );
+
+
+    const store =
+      transaction.objectStore(STATE_STORE);
+
+
+    store.put({
+      id: "current",
+
+      project: projectState,
+
+      scene: sceneState,
+
+      shot: shotState
+
+    });
+
+
+    transaction.oncomplete = function () {
+
+      console.log("Current state saved.");
+
+      resolve();
+
+    };
+
+
+    transaction.onerror = function (event) {
+
+      console.error(
+        "State save error:",
+        event.target.error
+      );
+
+      reject(event.target.error);
+
+    };
+
+  });
+
+}
+
+
+// ============================================
+// LOAD CURRENT STATE
+// ============================================
+
+function loadStateFromDB() {
+
+  if (!db) return;
+
+
+  return new Promise(function (resolve, reject) {
+
+    const transaction =
+      db.transaction(
+        STATE_STORE,
+        "readonly"
+      );
+
+
+    const store =
+      transaction.objectStore(STATE_STORE);
+
+
+    const request =
+      store.get("current");
+
+
+    request.onsuccess = function () {
+
+      const data = request.result;
+
+
+      if (data) {
+
+        projectState =
+          data.project || projectState;
+
+        sceneState =
+          data.scene || sceneState;
+
+        shotState =
+          data.shot || shotState;
+
+
+        applyStateToForm();
+
+      }
+
+
+      resolve();
+
+    };
+
+
+    request.onerror = function (event) {
+
+      console.error(
+        "State load error:",
+        event.target.error
+      );
+
+      reject(event.target.error);
+
+    };
+
+  });
+
+}
+
+
+// ============================================
+// APPLY STATE TO FORM
+// ============================================
+
+function applyStateToForm() {
+
+  // -------------------------
+  // PROJECT
+  // -------------------------
+
+  document.getElementById("date").value =
+    projectState.date || "";
+
+  document.getElementById("project").value =
+    projectState.project || "";
+
+  document.getElementById("director").value =
+    projectState.director || "";
+
+  document.getElementById("dp").value =
+    projectState.dp || "";
+
+  document.getElementById("camera").value =
+    projectState.camera || "";
+
+
+  // -------------------------
+  // SCENE
+  // -------------------------
+
+  document.getElementById("scene").value =
+    sceneState.scene || "";
+
+  document.getElementById("fps").value =
+    sceneState.fps || "";
+
+  document.getElementById("shutter").value =
+    sceneState.shutter || "";
+
+  document.getElementById("iso").value =
+    sceneState.iso || "";
+
+  document.getElementById("colorTemp").value =
+    sceneState.colorTemp || "";
+
+  document.getElementById("lut").value =
+    sceneState.lut || "";
+
+  document.getElementById("resolution").value =
+    sceneState.resolution || "";
+
+  document.getElementById("format").value =
+    sceneState.format || "";
+
+  document.getElementById("aspectRatio").value =
+    sceneState.aspectRatio || "";
+
+
+  // -------------------------
+  // SHOT
+  // -------------------------
+
+  document.getElementById("shot").value =
+    shotState.shot || "";
+
+  document.getElementById("lens").value =
+    shotState.lens || "";
+
+  document.getElementById("filters").value =
+    shotState.filters || "";
+
+  document.getElementById("focus").value =
+    shotState.focus || "";
+
+  document.getElementById("height").value =
+    shotState.height || "";
+
+  document.getElementById("tilt").value =
+    shotState.tilt || "";
+
+  document.getElementById("stop").value =
+    shotState.stop || "";
+
+
+  // -------------------------
+  // DISPLAY
+  // -------------------------
+
+  updateCurrentProject();
+
+  updateCurrentScene();
+
+  updateCurrentShot();
+
+}
+
+
+// ============================================
+// SAVE LOG TO INDEXEDDB
+// ============================================
+
+function saveLogToDB(log) {
+
+  if (!db) return;
+
+
+  return new Promise(function (resolve, reject) {
+
+    const transaction =
+      db.transaction(
+        LOG_STORE,
+        "readwrite"
+      );
+
+
+    const store =
+      transaction.objectStore(LOG_STORE);
+
+
+    store.add(log);
+
+
+    transaction.oncomplete = function () {
+
+      console.log("Log saved locally.");
+
+      resolve();
+
+    };
+
+
+    transaction.onerror = function (event) {
+
+      console.error(
+        "Log save error:",
+        event.target.error
+      );
+
+      reject(event.target.error);
+
+    };
+
+  });
+
+}
+
+
+// ============================================
+// LOAD LOGS FROM INDEXEDDB
+// ============================================
+
+function loadLogsFromDB() {
+
+  if (!db) return;
+
+
+  return new Promise(function (resolve, reject) {
+
+    const transaction =
+      db.transaction(
+        LOG_STORE,
+        "readonly"
+      );
+
+
+    const store =
+      transaction.objectStore(LOG_STORE);
+
+
+    const request =
+      store.getAll();
+
+
+    request.onsuccess = function () {
+
+      logs = request.result || [];
+
+      renderHistory();
+
+      resolve();
+
+    };
+
+
+    request.onerror = function (event) {
+
+      console.error(
+        "Log load error:",
+        event.target.error
+      );
+
+      reject(event.target.error);
+
+    };
+
+  });
+
+}
+
+
+// ============================================
+// INITIALIZE APP
+// ============================================
+
+document.addEventListener(
+  "DOMContentLoaded",
+  async function () {
+
+    console.log(
+      "Camera Log App loaded."
+    );
+
+
+    try {
+
+      await openDatabase();
+
+      await loadStateFromDB();
+
+      await loadLogsFromDB();
+
+
+      console.log(
+        "Camera Log local data loaded."
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Initialization error:",
+        error
+      );
+
+    }
+
+  }
+);
+
+
+// ============================================
 // TOGGLE SECTION
-// ==================================
+// ============================================
 
 function toggleSection(id) {
 
-  const element = document.getElementById(id);
+  const element =
+    document.getElementById(id);
+
 
   if (!element) return;
 
+
   if (element.style.display === "none") {
+
     element.style.display = "";
+
   } else {
+
     element.style.display = "none";
+
   }
 
 }
 
 
-// ==================================
+// ============================================
+// UPDATE PROJECT STATE
+// ============================================
+
+function updateProjectState() {
+
+  projectState.date =
+    document.getElementById("date").value;
+
+  projectState.project =
+    document.getElementById("project").value;
+
+  projectState.director =
+    document.getElementById("director").value;
+
+  projectState.dp =
+    document.getElementById("dp").value;
+
+  projectState.camera =
+    document.getElementById("camera").value;
+
+
+  saveStateToDB();
+
+  updateCurrentProject();
+
+}
+
+
+// ============================================
+// UPDATE CURRENT PROJECT DISPLAY
+// ============================================
+
+function updateCurrentProject() {
+
+  const element =
+    document.getElementById(
+      "currentProject"
+    );
+
+
+  if (!element) return;
+
+
+  if (projectState.project) {
+
+    element.textContent =
+      projectState.project;
+
+  } else {
+
+    element.textContent =
+      "No Project";
+
+  }
+
+}
+
+
+// ============================================
 // EDIT SCENE
-// ==================================
+// ============================================
 
 function editScene() {
 
@@ -112,14 +621,38 @@ function editScene() {
   sceneState.aspectRatio =
     document.getElementById("aspectRatio").value;
 
+
+  saveStateToDB();
+
   updateCurrentScene();
 
 }
 
 
-// ==================================
+// ============================================
+// UPDATE CURRENT SCENE DISPLAY
+// ============================================
+
+function updateCurrentScene() {
+
+  const element =
+    document.getElementById(
+      "currentScene"
+    );
+
+
+  if (!element) return;
+
+
+  element.textContent =
+    sceneState.scene || "—";
+
+}
+
+
+// ============================================
 // EDIT SHOT
-// ==================================
+// ============================================
 
 function editShot() {
 
@@ -144,92 +677,81 @@ function editShot() {
   shotState.stop =
     document.getElementById("stop").value;
 
+
+  saveStateToDB();
+
   updateCurrentShot();
 
 }
 
 
-// ==================================
-// UPDATE CURRENT SCENE DISPLAY
-// ==================================
-
-function updateCurrentScene() {
-
-  const sceneElement =
-    document.getElementById("currentScene");
-
-  sceneElement.textContent =
-    sceneState.scene || "—";
-
-}
-
-
-// ==================================
+// ============================================
 // UPDATE CURRENT SHOT DISPLAY
-// ==================================
+// ============================================
 
 function updateCurrentShot() {
 
-  const shotElement =
-    document.getElementById("currentShot");
+  const element =
+    document.getElementById(
+      "currentShot"
+    );
 
-  shotElement.textContent =
+
+  if (!element) return;
+
+
+  element.textContent =
     shotState.shot || "—";
 
 }
 
 
-// ==================================
+// ============================================
 // SAVE TAKE
-// ==================================
+// ============================================
 
-function saveTake() {
+async function saveTake() {
 
-  // Save Project information
+  // -------------------------
+  // Update current state
+  // -------------------------
 
-  projectState.date =
-    document.getElementById("date").value;
-
-  projectState.project =
-    document.getElementById("project").value;
-
-  projectState.director =
-    document.getElementById("director").value;
-
-  projectState.dp =
-    document.getElementById("dp").value;
-
-  projectState.camera =
-    document.getElementById("camera").value;
-
-
-  // Save Scene information
+  updateProjectState();
 
   editScene();
-
-
-  // Save Shot information
 
   editShot();
 
 
-  // Create Take record
+  // -------------------------
+  // Create log
+  // -------------------------
 
   const take = {
 
-    date: projectState.date,
+    createdAt:
+      new Date().toISOString(),
 
-    project: projectState.project,
+    date:
+      projectState.date,
 
-    director: projectState.director,
+    project:
+      projectState.project,
 
-    dp: projectState.dp,
+    director:
+      projectState.director,
 
-    camera: projectState.camera,
+    dp:
+      projectState.dp,
 
-    scene: sceneState.scene,
+    camera:
+      projectState.camera,
 
-    shot: shotState.shot,
+    scene:
+      sceneState.scene,
+
+    shot:
+      shotState.shot,
 
     take:
       document.getElementById("take").value,
@@ -240,33 +762,47 @@ function saveTake() {
     clip:
       document.getElementById("clip").value,
 
-    lens: shotState.lens,
+    lens:
+      shotState.lens,
 
-    filters: shotState.filters,
+    filters:
+      shotState.filters,
 
-    focus: shotState.focus,
+    focus:
+      shotState.focus,
 
-    height: shotState.height,
+    height:
+      shotState.height,
 
-    tilt: shotState.tilt,
+    tilt:
+      shotState.tilt,
 
-    stop: shotState.stop,
+    stop:
+      shotState.stop,
 
-    fps: sceneState.fps,
+    fps:
+      sceneState.fps,
 
-    shutter: sceneState.shutter,
+    shutter:
+      sceneState.shutter,
 
-    iso: sceneState.iso,
+    iso:
+      sceneState.iso,
 
-    colorTemp: sceneState.colorTemp,
+    colorTemp:
+      sceneState.colorTemp,
 
-    lut: sceneState.lut,
+    lut:
+      sceneState.lut,
 
-    resolution: sceneState.resolution,
+    resolution:
+      sceneState.resolution,
 
-    format: sceneState.format,
+    format:
+      sceneState.format,
 
-    aspectRatio: sceneState.aspectRatio,
+    aspectRatio:
+      sceneState.aspectRatio,
 
     note:
       document.getElementById("note").value
@@ -274,38 +810,57 @@ function saveTake() {
   };
 
 
-  // Add to history
+  // -------------------------
+  // Save log locally
+  // -------------------------
+
+  await saveLogToDB(take);
+
+
+  // Keep local memory in sync
 
   logs.push(take);
 
 
-  // Display history
-
   renderHistory();
 
 
-  // Clear Take fields ONLY
+  // -------------------------
+  // Clear Take fields
+  // -------------------------
 
   document.getElementById("take").value = "";
+
+  // IMPORTANT:
+  // ROLL is intentionally NOT cleared.
 
   document.getElementById("clip").value = "";
 
   document.getElementById("note").value = "";
 
 
-  console.log("Take saved:", take);
+  console.log(
+    "Take saved:",
+    take
+  );
 
 }
 
 
-// ==================================
+// ============================================
 // RENDER LOG HISTORY
-// ==================================
+// ============================================
 
 function renderHistory() {
 
   const container =
-    document.getElementById("logHistory");
+    document.getElementById(
+      "logHistory"
+    );
+
+
+  if (!container) return;
+
 
   container.innerHTML = "";
 
@@ -320,8 +875,6 @@ function renderHistory() {
   }
 
 
-  // Newest first
-
   const reversed =
     [...logs].reverse();
 
@@ -332,7 +885,9 @@ function renderHistory() {
       document.createElement("div");
 
 
-    item.style.padding = "12px 0";
+    item.style.padding =
+      "12px 0";
+
 
     item.style.borderBottom =
       "1px solid #333";
@@ -341,8 +896,11 @@ function renderHistory() {
     item.innerHTML = `
 
       <strong>
-        Scene ${log.scene}
-        / Shot ${log.shot}
+
+        Scene ${log.scene || "—"}
+
+        / Shot ${log.shot || "—"}
+
       </strong>
 
       <br>
@@ -371,23 +929,26 @@ function renderHistory() {
 }
 
 
-// ==================================
+// ============================================
 // NEW PROJECT
-// ==================================
+// ============================================
 
-function newProject() {
+async function newProject() {
 
   const confirmed =
     confirm(
       "Start a new project?\n\n" +
-      "Current project information will be cleared."
+      "Current project information and " +
+      "current setup will be cleared."
     );
 
 
   if (!confirmed) return;
 
 
+  // -------------------------
   // Clear Project
+  // -------------------------
 
   document.getElementById("date").value = "";
 
@@ -400,7 +961,9 @@ function newProject() {
   document.getElementById("camera").value = "";
 
 
+  // -------------------------
   // Clear Scene
+  // -------------------------
 
   document.getElementById("scene").value = "";
 
@@ -421,7 +984,9 @@ function newProject() {
   document.getElementById("aspectRatio").value = "";
 
 
+  // -------------------------
   // Clear Shot
+  // -------------------------
 
   document.getElementById("shot").value = "";
 
@@ -438,7 +1003,9 @@ function newProject() {
   document.getElementById("stop").value = "";
 
 
+  // -------------------------
   // Clear Take
+  // -------------------------
 
   document.getElementById("take").value = "";
 
@@ -449,19 +1016,25 @@ function newProject() {
   document.getElementById("note").value = "";
 
 
+  // -------------------------
   // Reset states
+  // -------------------------
 
   projectState = {
+
     date: "",
     project: "",
     director: "",
     dp: "",
     camera: ""
+
   };
 
 
   sceneState = {
+
     scene: "",
+
     fps: "",
     shutter: "",
     iso: "",
@@ -470,31 +1043,44 @@ function newProject() {
     resolution: "",
     format: "",
     aspectRatio: ""
+
   };
 
 
   shotState = {
+
     shot: "",
+
     lens: "",
     filters: "",
     focus: "",
     height: "",
     tilt: "",
     stop: ""
+
   };
 
 
-  logs = [];
+  // -------------------------
+  // Clear current state DB
+  // -------------------------
 
+  await saveStateToDB();
+
+
+  // -------------------------
+  // Update display
+  // -------------------------
+
+  updateCurrentProject();
 
   updateCurrentScene();
 
   updateCurrentShot();
 
-  renderHistory();
 
-
-  document.getElementById("currentProject")
-    .textContent = "No Project";
+  console.log(
+    "New project started."
+  );
 
 }
