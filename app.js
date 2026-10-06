@@ -247,6 +247,140 @@ function saveLogToDB(log) {
   });
 }
 
+// ==============================
+// Send Log to Google Sheet
+// ==============================
+
+async function sendToGoogleSheet(log) {
+
+  try {
+
+    const response = await fetch(
+      GOOGLE_SCRIPT_URL,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+
+        body: JSON.stringify({
+
+          DATE:
+            log.project.date,
+
+          PROJECT:
+            log.project.project,
+
+          DIRECTOR:
+            log.project.director,
+
+          DP:
+            log.project.dp,
+
+          Camera:
+            log.project.camera,
+
+          SCENE:
+            log.scene.scene,
+
+          SHOT:
+            log.shot.shot,
+
+          TAKE:
+            log.take,
+
+          ROLL:
+            log.roll,
+
+          CLIP:
+            log.clip,
+
+          LENS:
+            log.shot.lens,
+
+          FILTERS:
+            log.shot.filters,
+
+          FOCUS:
+            log.shot.focus,
+
+          HEIGHT:
+            log.shot.height,
+
+          TILT:
+            log.shot.tilt,
+
+          STOP:
+            log.shot.stop,
+
+          FPS:
+            log.scene.fps,
+
+          SHUTTER:
+            log.scene.shutter,
+
+          ISO:
+            log.scene.iso,
+
+          "Color Temp":
+            log.scene.colorTemp,
+
+          LUT:
+            log.scene.lut,
+
+          RESOLUTION:
+            log.scene.resolution,
+
+          FORMAT:
+            log.scene.format,
+
+          "ASPECT RATIO":
+            log.scene.aspectRatio,
+
+          NOTE:
+            log.note
+        })
+      }
+    );
+
+
+    const result =
+      await response.json();
+
+
+    console.log(
+      "Google Sheet response:",
+      result
+    );
+
+
+    if (!result.success) {
+
+      throw new Error(
+        result.error ||
+        "Google Sheet rejected the data."
+      );
+    }
+
+
+    console.log(
+      "Google Sheet sync successful."
+    );
+
+    return true;
+
+
+  } catch (error) {
+
+    console.error(
+      "Google Sheet sync failed:",
+      error
+    );
+
+    return false;
+  }
+}
 
 // ==============================
 // Load Logs
