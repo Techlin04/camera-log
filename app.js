@@ -260,7 +260,7 @@ function sendToGoogleSheet(log) {
   return new Promise((resolve) => {
 
     // ======================================
-    // 建立要送出的資料
+    // 建立 Camera Log 資料
     // ======================================
 
     const data = {
@@ -339,62 +339,26 @@ function sendToGoogleSheet(log) {
 
       NOTE:
         log.note
+
     };
 
 
     // ======================================
-    // JSON
-    // ======================================
-
-    const jsonData =
-      JSON.stringify(data);
-
-
-    // ======================================
-    // URL Encode
-    // ======================================
-
-    const encodedData =
-      encodeURIComponent(jsonData);
-
-
-    // ======================================
-    // 建立 GET URL
-    // ======================================
-
-    const url =
-      GOOGLE_SCRIPT_URL +
-      "?data=" +
-      encodedData;
-
-
-    console.log(
-      "Sending Camera Log to Google Sheet..."
-    );
-
-
-    console.log(
-      url
-    );
-
-
-    // ======================================
-    // 使用 hidden iframe
-    //
-    // 不需要 CORS
+    // 建立隱藏 iframe
     // ======================================
 
     const iframe =
       document.createElement("iframe");
 
+    const iframeName =
+      "cameraLogSubmit_" +
+      Date.now();
+
+    iframe.name =
+      iframeName;
 
     iframe.style.display =
       "none";
-
-
-    iframe.src =
-      url;
-
 
     document.body.appendChild(
       iframe
@@ -402,18 +366,80 @@ function sendToGoogleSheet(log) {
 
 
     // ======================================
-    // 等待 Apps Script 執行
+    // 建立 POST Form
+    // ======================================
+
+    const form =
+      document.createElement("form");
+
+    form.method =
+      "POST";
+
+    form.action =
+      GOOGLE_SCRIPT_URL;
+
+    form.target =
+      iframeName;
+
+    form.style.display =
+      "none";
+
+
+    // ======================================
+    // 將 JSON 放進 data
+    // ======================================
+
+    const input =
+      document.createElement("input");
+
+    input.type =
+      "hidden";
+
+    input.name =
+      "data";
+
+    input.value =
+      JSON.stringify(data);
+
+
+    form.appendChild(
+      input
+    );
+
+    document.body.appendChild(
+      form
+    );
+
+
+    // ======================================
+    // 送出
+    // ======================================
+
+    console.log(
+      "Sending Camera Log to Google Sheet..."
+    );
+
+    console.log(
+      data
+    );
+
+
+    form.submit();
+
+
+    // ======================================
+    // 等待 Apps Script
     // ======================================
 
     setTimeout(() => {
 
-      iframe.remove();
+      form.remove();
 
+      iframe.remove();
 
       console.log(
         "Google Sheet request sent."
       );
-
 
       resolve(true);
 
