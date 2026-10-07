@@ -1257,12 +1257,11 @@ function editScene() {
 // ==============================
 
 function editShot() {
+
   readFormToState();
 
   const shot =
-    document.getElementById(
-      "shot"
-    ).value;
+    document.getElementById("shot").value;
 
   sessionState.shot.shot =
     shot;
@@ -1270,6 +1269,8 @@ function editShot() {
   updateCurrentLabels();
 
   saveSession();
+
+  toggleSection("shotContent");
 }
 
 // ==============================
