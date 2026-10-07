@@ -1363,15 +1363,21 @@ function editScene() {
   const scene =
     document.getElementById("scene").value;
 
-  sessionState.scene.scene =
-    scene;
+  sessionState.scene.scene = scene;
 
   updateCurrentLabels();
 
   saveSession();
 
-  toggleSection("sceneContent");
+  // Open Scene settings
+  const section =
+    document.getElementById("sceneContent");
+
+  if (section) {
+    section.classList.remove("collapsed");
+  }
 }
+
 
 // ==============================
 // Edit Shot
@@ -1384,16 +1390,197 @@ function editShot() {
   const shot =
     document.getElementById("shot").value;
 
-  sessionState.shot.shot =
-    shot;
+  sessionState.shot.shot = shot;
 
   updateCurrentLabels();
 
   saveSession();
 
-  toggleSection("shotContent");
+  // Open Shot settings
+  const section =
+    document.getElementById("shotContent");
+
+  if (section) {
+    section.classList.remove("collapsed");
+  }
 }
 
+
+// ==============================
+// NEW SCENE
+// ==============================
+
+async function newScene() {
+
+  const confirmed =
+    confirm(
+      "Start a new scene?"
+    );
+
+  if (!confirmed) {
+    return;
+  }
+
+  // --------------------------------
+  // Read current state first
+  // --------------------------------
+
+  readFormToState();
+
+  // --------------------------------
+  // Reset Scene
+  // --------------------------------
+
+  sessionState.scene = {
+
+    scene: "",
+
+    fps: "",
+    shutter: "",
+    iso: "",
+    colorTemp: "",
+    lut: "",
+    resolution: "",
+    format: "",
+    aspectRatio: ""
+  };
+
+  // --------------------------------
+  // Reset Shot together
+  // --------------------------------
+
+  sessionState.shot = {
+
+    shot: "",
+
+    lens: "",
+    filters: "",
+    focus: "",
+    height: "",
+    tilt: "",
+    stop: ""
+  };
+
+  // --------------------------------
+  // Apply to form
+  // --------------------------------
+
+  applyStateToForm();
+
+  updateCurrentLabels();
+
+  // --------------------------------
+  // Open Scene settings
+  // --------------------------------
+
+  const sceneSection =
+    document.getElementById(
+      "sceneContent"
+    );
+
+  if (sceneSection) {
+    sceneSection.classList.remove(
+      "collapsed"
+    );
+  }
+
+  // --------------------------------
+  // Keep Shot closed
+  // --------------------------------
+
+  const shotSection =
+    document.getElementById(
+      "shotContent"
+    );
+
+  if (shotSection) {
+    shotSection.classList.add(
+      "collapsed"
+    );
+  }
+
+  // --------------------------------
+  // Save working state
+  // --------------------------------
+
+  await saveSession();
+
+  console.log(
+    "New scene started."
+  );
+}
+
+
+// ==============================
+// NEW SHOT
+// ==============================
+
+async function newShot() {
+
+  const confirmed =
+    confirm(
+      "Start a new shot?"
+    );
+
+  if (!confirmed) {
+    return;
+  }
+
+  // --------------------------------
+  // Read current state first
+  // --------------------------------
+
+  readFormToState();
+
+  // --------------------------------
+  // Reset Shot only
+  // --------------------------------
+
+  sessionState.shot = {
+
+    shot: "",
+
+    lens: "",
+    filters: "",
+    focus: "",
+    height: "",
+    tilt: "",
+    stop: ""
+  };
+
+  // --------------------------------
+  // Apply to form
+  // --------------------------------
+
+  applyStateToForm();
+
+  updateCurrentLabels();
+
+  // --------------------------------
+  // Open Shot settings
+  // --------------------------------
+
+  const shotSection =
+    document.getElementById(
+      "shotContent"
+    );
+
+  if (shotSection) {
+    shotSection.classList.remove(
+      "collapsed"
+    );
+  }
+
+  // --------------------------------
+  // Save working state
+  // --------------------------------
+
+  await saveSession();
+
+  console.log(
+    "New shot started."
+  );
+}
 // ==============================
 // SAVE TAKE
 // ==============================
