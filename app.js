@@ -1380,7 +1380,7 @@ function editShot() {
   const section = document.getElementById("shotContent");
 
   if (section) {
-    section.classList.remove("collapsed");
+    section.classList.toggle("collapsed");
   }
 
   updateCurrentLabels();
