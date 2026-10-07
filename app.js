@@ -1236,12 +1236,11 @@ function toggleSection(
 // ==============================
 
 function editScene() {
+
   readFormToState();
 
   const scene =
-    document.getElementById(
-      "scene"
-    ).value;
+    document.getElementById("scene").value;
 
   sessionState.scene.scene =
     scene;
@@ -1249,6 +1248,8 @@ function editScene() {
   updateCurrentLabels();
 
   saveSession();
+
+  toggleSection("sceneContent");
 }
 
 // ==============================
