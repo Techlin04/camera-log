@@ -2,16 +2,26 @@
   box-sizing: border-box;
 }
 
+
+html {
+  background: #0d0d0d;
+}
+
+
 body {
   margin: 0;
-  background: #111;
+
+  background: #0d0d0d;
   color: #eee;
+
   font-family:
     -apple-system,
     BlinkMacSystemFont,
     "Segoe UI",
     Arial,
     sans-serif;
+
+  -webkit-font-smoothing: antialiased;
 }
 
 
@@ -22,28 +32,47 @@ body {
 .topbar {
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 20;
 
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  padding: 16px 20px;
+  padding: 14px 20px;
 
-  background: #181818;
+  background: rgba(20, 20, 20, 0.96);
+
   border-bottom: 1px solid #333;
+
+  backdrop-filter: blur(10px);
 }
+
+
+.topbar-left {
+  min-width: 0;
+}
+
 
 .topbar h1 {
   margin: 0;
-  font-size: 20px;
-  letter-spacing: 1px;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  letter-spacing: 1.5px;
 }
+
 
 .topbar p {
   margin: 4px 0 0;
+
   color: #999;
-  font-size: 13px;
+
+  font-size: 12px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 
@@ -54,7 +83,9 @@ body {
 .container {
   width: 100%;
   max-width: 900px;
+
   margin: auto;
+
   padding: 16px;
 }
 
@@ -64,46 +95,117 @@ body {
 ========================= */
 
 .card {
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 
-  background: #1b1b1b;
-  border: 1px solid #333;
+  background: #181818;
+
+  border: 1px solid #303030;
+
   border-radius: 10px;
 
   overflow: hidden;
 }
 
 
+.project-card,
+.scene-card,
+.shot-card {
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+
+.project-card:hover,
+.scene-card:hover,
+.shot-card:hover {
+  border-color: #444;
+}
+
+
 /* =========================
-   SECTION TITLE
+   SECTION HEADER
 ========================= */
 
 .section-title {
   display: flex;
+
   justify-content: space-between;
   align-items: center;
 
-  padding: 14px 16px;
+  min-height: 58px;
 
-  background: #222;
-  border-bottom: 1px solid #333;
+  padding: 12px 16px;
+
+  background: #202020;
+
+  border-bottom: 1px solid #303030;
 }
 
-.section-title h2 {
-  margin: 0;
-  font-size: 15px;
-  letter-spacing: 1px;
+
+.section-heading {
+  display: flex;
+
+  align-items: baseline;
+
+  gap: 12px;
+
+  min-width: 0;
 }
+
 
 .section-label {
-  font-size: 13px;
-  color: #999;
-  margin-right: 10px;
+  color: #777;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 1.2px;
 }
 
+
+.section-summary {
+  color: #aaa;
+
+  font-size: 14px;
+}
+
+
 .current-value {
-  font-size: 18px;
-  font-weight: 600;
+  color: #fff;
+
+  font-size: 20px;
+  font-weight: 700;
+
+  letter-spacing: 0.3px;
+
+  white-space: nowrap;
+}
+
+
+.edit-btn {
+  flex-shrink: 0;
+
+  padding: 7px 12px;
+
+  background: #303030;
+
+  border: 1px solid #444;
+  border-radius: 5px;
+
+  color: #ddd;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 0.6px;
+
+  cursor: pointer;
+}
+
+
+.edit-btn:hover {
+  background: #3a3a3a;
 }
 
 
@@ -113,6 +215,29 @@ body {
 
 .content {
   padding: 16px;
+
+  max-height: 1000px;
+
+  opacity: 1;
+
+  overflow: hidden;
+
+  transition:
+    max-height 0.2s ease,
+    opacity 0.15s ease,
+    padding 0.2s ease;
+}
+
+
+/* Collapsed state */
+
+.content.collapsed {
+  max-height: 0;
+
+  padding-top: 0;
+  padding-bottom: 0;
+
+  opacity: 0;
 }
 
 
@@ -136,37 +261,63 @@ body {
 
 label {
   display: flex;
+
   flex-direction: column;
 
   gap: 6px;
 
-  color: #aaa;
+  color: #999;
 
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.6px;
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 0.8px;
 }
+
 
 input,
 textarea {
   width: 100%;
 
-  padding: 12px;
+  padding: 11px 12px;
 
-  border: 1px solid #444;
+  border: 1px solid #3b3b3b;
+
   border-radius: 6px;
 
-  background: #101010;
+  background: #0f0f0f;
+
   color: #fff;
+
+  font-family: inherit;
 
   font-size: 16px;
 
   outline: none;
+
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
 }
+
+
+input:hover,
+textarea:hover {
+  border-color: #555;
+}
+
 
 input:focus,
 textarea:focus {
   border-color: #888;
+
+  background: #141414;
+}
+
+
+input::placeholder,
+textarea::placeholder {
+  color: #555;
 }
 
 
@@ -174,13 +325,23 @@ textarea:focus {
    HEADINGS
 ========================= */
 
+h2 {
+  margin: 0;
+
+  font-size: 14px;
+
+  letter-spacing: 1px;
+}
+
+
 h3 {
   margin: 22px 0 12px;
 
-  color: #777;
+  color: #666;
 
-  font-size: 11px;
-  letter-spacing: 1px;
+  font-size: 10px;
+
+  letter-spacing: 1.2px;
 }
 
 
@@ -190,12 +351,16 @@ h3 {
 
 button {
   border: 0;
+
   border-radius: 6px;
 
   padding: 9px 14px;
 
   background: #333;
+
   color: #fff;
+
+  font-family: inherit;
 
   font-size: 12px;
   font-weight: 600;
@@ -203,14 +368,32 @@ button {
   letter-spacing: 0.5px;
 
   cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    transform 0.05s ease;
 }
+
 
 button:hover {
   background: #444;
 }
 
+
+button:active {
+  transform: translateY(1px);
+}
+
+
 .secondary-btn {
-  background: #2a2a2a;
+  background: #292929;
+
+  border: 1px solid #414141;
+}
+
+
+.secondary-btn:hover {
+  background: #353535;
 }
 
 
@@ -219,15 +402,53 @@ button:hover {
 ========================= */
 
 .take-card {
+  margin-top: 20px;
+
   border-color: #555;
+
+  background: #191919;
 }
+
+
+.take-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 14px 16px;
+
+  border-bottom: 1px solid #333;
+}
+
+
+.take-header h2 {
+  font-size: 15px;
+
+  letter-spacing: 1.2px;
+}
+
+
+.take-hint {
+  color: #666;
+
+  font-size: 11px;
+}
+
+
+.take-grid {
+  padding: 16px 16px 0;
+}
+
 
 .note-field {
-  margin-top: 12px;
+  margin: 12px 16px 0;
 }
 
+
 textarea {
-  min-height: 100px;
+  min-height: 80px;
+
   resize: vertical;
 }
 
@@ -237,23 +458,32 @@ textarea {
 ========================= */
 
 .save-btn {
-  width: 100%;
+  width: calc(100% - 32px);
 
-  margin-top: 16px;
+  margin: 16px;
 
-  padding: 16px;
+  padding: 17px;
 
   background: #eee;
+
   color: #111;
 
-  font-size: 15px;
-  font-weight: 700;
+  border-radius: 7px;
 
-  letter-spacing: 1px;
+  font-size: 15px;
+  font-weight: 800;
+
+  letter-spacing: 1.2px;
 }
+
 
 .save-btn:hover {
   background: #fff;
+}
+
+
+.save-btn:active {
+  background: #ddd;
 }
 
 
@@ -261,17 +491,65 @@ textarea {
    LOG HISTORY
 ========================= */
 
-#logHistory {
-  padding: 16px;
+.history-card {
+  margin-top: 12px;
 }
 
-.empty {
+
+#history {
+  padding: 0;
+}
+
+
+.empty,
+.empty-history {
   margin: 0;
 
-  color: #666;
+  padding: 28px 16px;
+
+  color: #555;
 
   text-align: center;
-  font-size: 13px;
+
+  font-size: 12px;
+}
+
+
+.history-item {
+  padding: 14px 16px;
+
+  border-bottom: 1px solid #292929;
+}
+
+
+.history-item:last-child {
+  border-bottom: 0;
+}
+
+
+.history-title {
+  color: #eee;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+
+.history-details {
+  margin-top: 6px;
+
+  color: #777;
+
+  font-size: 11px;
+}
+
+
+.history-note {
+  margin-top: 7px;
+
+  color: #aaa;
+
+  font-size: 12px;
 }
 
 
@@ -282,25 +560,98 @@ textarea {
 @media (max-width: 600px) {
 
   .topbar {
-    padding: 14px;
+    padding: 12px 14px;
   }
+
+
+  .topbar h1 {
+    font-size: 16px;
+  }
+
+
+  .topbar p {
+    max-width: 190px;
+  }
+
 
   .container {
     padding: 10px;
   }
 
+
+  .card {
+    border-radius: 8px;
+  }
+
+
+  .section-title {
+    min-height: 56px;
+
+    padding: 11px 13px;
+  }
+
+
+  .section-heading {
+    gap: 8px;
+  }
+
+
+  .current-value {
+    font-size: 18px;
+  }
+
+
+  .section-summary {
+    font-size: 12px;
+  }
+
+
+  .content {
+    padding: 13px;
+  }
+
+
   .grid {
     grid-template-columns: 1fr;
+
+    gap: 11px;
   }
+
 
   input,
   textarea {
     font-size: 16px;
+
     padding: 13px;
   }
 
+
   button {
-    padding: 11px 14px;
+    padding: 10px 13px;
+  }
+
+
+  .take-grid {
+    padding: 14px 13px 0;
+  }
+
+
+  .note-field {
+    margin: 11px 13px 0;
+  }
+
+
+  .save-btn {
+    width: calc(100% - 26px);
+
+    margin: 14px 13px;
+
+    padding: 17px;
+  }
+
+
+  .history-item {
+    padding: 13px;
   }
 
 }
