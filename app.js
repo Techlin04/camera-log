@@ -1107,34 +1107,69 @@ function applyStateToForm() {
 // ==============================
 
 function updateCurrentLabels() {
+
   const projectLabel =
-    document.getElementById(
-      "currentProject"
-    );
+    document.getElementById("currentProject");
+
+  const projectSummary =
+    document.getElementById("projectSummary");
 
   const sceneLabel =
-    document.getElementById(
-      "currentScene"
-    );
+    document.getElementById("currentScene");
 
   const shotLabel =
-    document.getElementById(
-      "currentShot"
-    );
+    document.getElementById("currentShot");
+
+
+  // PROJECT
+
+  const projectName =
+    sessionState.project.project ||
+    "No Project";
 
   if (projectLabel) {
     projectLabel.textContent =
-      sessionState.project.project ||
-      "No Project";
+      projectName;
   }
 
+  if (projectSummary) {
+
+    const director =
+      sessionState.project.director;
+
+    const dp =
+      sessionState.project.dp;
+
+    const camera =
+      sessionState.project.camera;
+
+    const details = [
+      director,
+      dp,
+      camera
+    ].filter(Boolean);
+
+    projectSummary.textContent =
+      details.length > 0
+        ? `${projectName} · ${details.join(" · ")}`
+        : projectName;
+  }
+
+
+  // SCENE
+
   if (sceneLabel) {
+
     sceneLabel.textContent =
       sessionState.scene.scene ||
       "No Scene";
   }
 
+
+  // SHOT
+
   if (shotLabel) {
+
     shotLabel.textContent =
       sessionState.shot.shot ||
       "No Shot";
