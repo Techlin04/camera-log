@@ -1357,25 +1357,16 @@ function toggleSection(
 // ==============================
 
 function editScene() {
-
   readFormToState();
 
-  const scene =
-    document.getElementById("scene").value;
-
-  sessionState.scene.scene = scene;
-
-  updateCurrentLabels();
-
-  saveSession();
-
-  // Open Scene settings
-  const section =
-    document.getElementById("sceneContent");
+  const section = document.getElementById("sceneContent");
 
   if (section) {
     section.classList.remove("collapsed");
   }
+
+  updateCurrentLabels();
+  saveSession();
 }
 
 
