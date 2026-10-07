@@ -1486,29 +1486,10 @@ async function newScene() {
   // --------------------------------
 
 
-    // Close Scene and Shot settings
-  const sceneSection =
-    document.getElementById(
-      "sceneContent"
-    );
+  // --------------------------------
+  // Save working state
+  // --------------------------------
 
-  if (sceneSection) {
-    sceneSection.classList.add(
-      "collapsed"
-    );
-  }
-
-  const shotSection =
-    document.getElementById(
-      "shotContent"
-    );
-
-  if (shotSection) {
-    shotSection.classList.add(
-      "collapsed"
-    );
-  }
-  
   await saveSession();
 
   console.log(
