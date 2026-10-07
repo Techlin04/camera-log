@@ -1117,20 +1117,31 @@ function updateCurrentLabels() {
   const sceneLabel =
     document.getElementById("currentScene");
 
+  const sceneSummary =
+    document.getElementById("sceneSummary");
+
   const shotLabel =
     document.getElementById("currentShot");
 
+  const shotSummary =
+    document.getElementById("shotSummary");
 
+
+  // =========================
   // PROJECT
+  // =========================
 
   const projectName =
     sessionState.project.project ||
     "No Project";
 
+
   if (projectLabel) {
+
     projectLabel.textContent =
       projectName;
   }
+
 
   if (projectSummary) {
 
@@ -1156,7 +1167,9 @@ function updateCurrentLabels() {
   }
 
 
+  // =========================
   // SCENE
+  // =========================
 
   if (sceneLabel) {
 
@@ -1166,13 +1179,121 @@ function updateCurrentLabels() {
   }
 
 
+  if (sceneSummary) {
+
+    const settings = [];
+
+    if (sessionState.scene.fps) {
+      settings.push(
+        `${sessionState.scene.fps}fps`
+      );
+    }
+
+    if (sessionState.scene.shutter) {
+      settings.push(
+        sessionState.scene.shutter
+      );
+    }
+
+    if (sessionState.scene.iso) {
+      settings.push(
+        `ISO ${sessionState.scene.iso}`
+      );
+    }
+
+    if (sessionState.scene.colorTemp) {
+      settings.push(
+        `${sessionState.scene.colorTemp}K`
+      );
+    }
+
+    if (sessionState.scene.lut) {
+      settings.push(
+        sessionState.scene.lut
+      );
+    }
+
+    if (sessionState.scene.resolution) {
+      settings.push(
+        sessionState.scene.resolution
+      );
+    }
+
+    if (sessionState.scene.format) {
+      settings.push(
+        sessionState.scene.format
+      );
+    }
+
+    if (sessionState.scene.aspectRatio) {
+      settings.push(
+        sessionState.scene.aspectRatio
+      );
+    }
+
+    sceneSummary.textContent =
+      settings.length > 0
+        ? settings.join(" · ")
+        : "No Scene Setup";
+  }
+
+
+  // =========================
   // SHOT
+  // =========================
 
   if (shotLabel) {
 
     shotLabel.textContent =
       sessionState.shot.shot ||
       "No Shot";
+  }
+
+
+  if (shotSummary) {
+
+    const settings = [];
+
+    if (sessionState.shot.lens) {
+      settings.push(
+        sessionState.shot.lens
+      );
+    }
+
+    if (sessionState.shot.filters) {
+      settings.push(
+        sessionState.shot.filters
+      );
+    }
+
+    if (sessionState.shot.focus) {
+      settings.push(
+        `Focus ${sessionState.shot.focus}`
+      );
+    }
+
+    if (sessionState.shot.height) {
+      settings.push(
+        sessionState.shot.height
+      );
+    }
+
+    if (sessionState.shot.tilt) {
+      settings.push(
+        sessionState.shot.tilt
+      );
+    }
+
+    if (sessionState.shot.stop) {
+      settings.push(
+        `T${sessionState.shot.stop}`
+      );
+    }
+
+    shotSummary.textContent =
+      settings.length > 0
+        ? settings.join(" · ")
+        : "No Shot Setup";
   }
 }
 
