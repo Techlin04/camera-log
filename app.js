@@ -1375,25 +1375,16 @@ function editScene() {
 // ==============================
 
 function editShot() {
-
   readFormToState();
 
-  const shot =
-    document.getElementById("shot").value;
-
-  sessionState.shot.shot = shot;
-
-  updateCurrentLabels();
-
-  saveSession();
-
-  // Open Shot settings
-  const section =
-    document.getElementById("shotContent");
+  const section = document.getElementById("shotContent");
 
   if (section) {
     section.classList.remove("collapsed");
   }
+
+  updateCurrentLabels();
+  saveSession();
 }
 
 
