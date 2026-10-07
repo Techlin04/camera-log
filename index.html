@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
 
@@ -13,31 +14,68 @@
 
 <body>
 
+  <!-- =========================
+       TOP BAR
+  ========================= -->
+
   <header class="topbar">
-    <div>
+
+    <div class="topbar-left">
+
       <h1>CAMERA LOG</h1>
-      <p id="currentProject">No Project</p>
+
+      <p id="currentProject">
+        No Project
+      </p>
+
     </div>
 
-    <button class="secondary-btn" onclick="newProject()">
+    <button
+      class="secondary-btn"
+      onclick="newProject()">
       NEW PROJECT
     </button>
+
   </header>
 
 
   <main class="container">
 
-    <!-- PROJECT -->
-    <section class="card">
+
+    <!-- =========================
+         PROJECT
+    ========================= -->
+
+    <section class="card project-card">
 
       <div class="section-title">
-        <h2>PROJECT</h2>
-        <button onclick="toggleSection('projectContent')">
+
+        <div class="section-heading">
+
+          <span class="section-label">
+            PROJECT
+          </span>
+
+          <span
+            id="projectSummary"
+            class="section-summary">
+            No Project
+          </span>
+
+        </div>
+
+        <button
+          class="edit-btn"
+          onclick="toggleSection('projectContent')">
           EDIT
         </button>
+
       </div>
 
-      <div id="projectContent" class="content">
+
+      <div
+        id="projectContent"
+        class="content collapsed">
 
         <div class="grid">
 
@@ -73,26 +111,41 @@
     </section>
 
 
-    <!-- SCENE -->
-    <section class="card">
+
+    <!-- =========================
+         SCENE
+    ========================= -->
+
+    <section class="card scene-card">
 
       <div class="section-title">
 
-        <div>
-          <span class="section-label">SCENE</span>
-          <span id="currentScene" class="current-value">
-            —
+        <div class="section-heading">
+
+          <span class="section-label">
+            SCENE
           </span>
+
+          <span
+            id="currentScene"
+            class="current-value">
+            No Scene
+          </span>
+
         </div>
 
-        <button onclick="editScene()">
+        <button
+          class="edit-btn"
+          onclick="editScene()">
           EDIT
         </button>
 
       </div>
 
 
-      <div class="content">
+      <div
+        id="sceneContent"
+        class="content collapsed">
 
         <div class="grid">
 
@@ -105,6 +158,7 @@
 
 
         <h3>SCENE SETUP</h3>
+
 
         <div class="grid">
 
@@ -155,26 +209,41 @@
     </section>
 
 
-    <!-- SHOT -->
-    <section class="card">
+
+    <!-- =========================
+         SHOT
+    ========================= -->
+
+    <section class="card shot-card">
 
       <div class="section-title">
 
-        <div>
-          <span class="section-label">SHOT</span>
-          <span id="currentShot" class="current-value">
-            —
+        <div class="section-heading">
+
+          <span class="section-label">
+            SHOT
           </span>
+
+          <span
+            id="currentShot"
+            class="current-value">
+            No Shot
+          </span>
+
         </div>
 
-        <button onclick="editShot()">
+        <button
+          class="edit-btn"
+          onclick="editShot()">
           EDIT
         </button>
 
       </div>
 
 
-      <div class="content">
+      <div
+        id="shotContent"
+        class="content collapsed">
 
         <div class="grid">
 
@@ -187,6 +256,7 @@
 
 
         <h3>SHOT SETUP</h3>
+
 
         <div class="grid">
 
@@ -227,56 +297,99 @@
     </section>
 
 
-    <!-- TAKE -->
+
+    <!-- =========================
+         TAKE
+    ========================= -->
+
     <section class="card take-card">
 
-      <div class="section-title">
+      <div class="take-header">
 
         <h2>TAKE</h2>
 
+        <span class="take-hint">
+          Save current take
+        </span>
+
       </div>
 
-      <div class="grid">
+
+      <div class="grid take-grid">
 
         <label>
           TAKE
-          <input id="take" type="text">
+          <input
+            id="take"
+            type="text"
+            inputmode="numeric"
+            autocomplete="off">
         </label>
 
         <label>
           ROLL
-          <input id="roll" type="text">
+          <input
+            id="roll"
+            type="text"
+            autocomplete="off">
         </label>
 
         <label>
           CLIP
-          <input id="clip" type="text">
+          <input
+            id="clip"
+            type="text"
+            autocomplete="off">
         </label>
 
       </div>
 
 
       <label class="note-field">
+
         NOTE
-        <textarea id="note"></textarea>
+
+        <textarea
+          id="note"
+          placeholder="Optional note..."></textarea>
+
       </label>
 
 
-      <button class="save-btn" onclick="saveTake()">
-        SAVE
+      <button
+        class="save-btn"
+        onclick="saveTake()">
+
+        SAVE TAKE
+
       </button>
 
     </section>
 
 
-    <!-- LOG HISTORY -->
-    <section class="card">
+
+    <!-- =========================
+         LOG HISTORY
+    ========================= -->
+
+    <section class="card history-card">
 
       <div class="section-title">
 
-        <h2>LOG HISTORY</h2>
+        <div class="section-heading">
+
+          <span class="section-label">
+            LOG
+          </span>
+
+          <span class="section-summary">
+            HISTORY
+          </span>
+
+        </div>
 
       </div>
+
 
       <div id="history">
 
@@ -295,4 +408,5 @@
   <script src="app.js"></script>
 
 </body>
+
 </html>
