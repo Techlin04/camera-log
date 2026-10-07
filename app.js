@@ -259,37 +259,10 @@ function sendToGoogleSheet(log) {
 
   return new Promise((resolve) => {
 
-    // Create hidden iframe
-    const iframe =
-      document.createElement("iframe");
+    // ======================================
+    // 建立要送出的資料
+    // ======================================
 
-    const iframeName =
-      "googleSheetSubmit_" +
-      Date.now();
-
-    iframe.name = iframeName;
-
-    iframe.style.display = "none";
-
-    document.body.appendChild(iframe);
-
-
-    // Create hidden form
-    const form =
-      document.createElement("form");
-
-    form.method = "POST";
-
-    form.action =
-      GOOGLE_SCRIPT_URL;
-
-    form.target =
-      iframeName;
-
-    form.style.display = "none";
-
-
-    // Data that will be sent
     const data = {
 
       DATE:
@@ -369,48 +342,85 @@ function sendToGoogleSheet(log) {
     };
 
 
-    // Send JSON as one form field
-    const input =
-      document.createElement("input");
+    // ======================================
+    // JSON
+    // ======================================
 
-    input.type = "hidden";
-
-    input.name = "data";
-
-    input.value =
+    const jsonData =
       JSON.stringify(data);
 
-    form.appendChild(input);
+
+    // ======================================
+    // URL Encode
+    // ======================================
+
+    const encodedData =
+      encodeURIComponent(jsonData);
 
 
-    document.body.appendChild(form);
+    // ======================================
+    // 建立 GET URL
+    // ======================================
 
-
-    // Submit to Apps Script
-    form.submit();
+    const url =
+      GOOGLE_SCRIPT_URL +
+      "?data=" +
+      encodedData;
 
 
     console.log(
-      "Google Sheet submission sent."
+      "Sending Camera Log to Google Sheet..."
     );
 
 
-    // Give Apps Script time to receive the request.
-    setTimeout(() => {
+    console.log(
+      url
+    );
 
-      form.remove();
+
+    // ======================================
+    // 使用 hidden iframe
+    //
+    // 不需要 CORS
+    // ======================================
+
+    const iframe =
+      document.createElement("iframe");
+
+
+    iframe.style.display =
+      "none";
+
+
+    iframe.src =
+      url;
+
+
+    document.body.appendChild(
+      iframe
+    );
+
+
+    // ======================================
+    // 等待 Apps Script 執行
+    // ======================================
+
+    setTimeout(() => {
 
       iframe.remove();
 
+
       console.log(
-        "Google Sheet submission completed."
+        "Google Sheet request sent."
       );
+
 
       resolve(true);
 
-    }, 1500);
+    }, 2000);
 
   });
+
 }
 
 // ==============================
