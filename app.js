@@ -1362,7 +1362,7 @@ function editScene() {
   const section = document.getElementById("sceneContent");
 
   if (section) {
-    section.classList.remove("collapsed");
+    section.classList.toggle("collapsed");
   }
 
   updateCurrentLabels();
